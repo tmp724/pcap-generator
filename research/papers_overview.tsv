@@ -1,0 +1,43 @@
+<shortcut>	<title>	<origin>
+# covert channel detection
+2019_jyothsna_prasad	Anomaly-Based Intrusion Detection System	Sree Vidyanikethan Engineering College, Chadalawada Ramanamma Engineering College
+2008_nguyen_armitage	A Survey of Techniques for Internet Traffic Classification using Machine Learning	Swinburne University of Technology
+2017_tanjila	Internet Traffic Classification Techniques (Presentation)	University of California Davis
+2017_akhtar_kamran	Lightweight Internet Traffic Classification based on Packet Level Hidden Markov Models	University of Engineering and Technology Lahore
+2013_mantere_sailio_noponen	Network Traffic Features for Anomaly Detection in Specific Industrial Control System Network	VTT Technical Research Centre of Finland
+2020_holland_etc	nPrint: A Standard Data Representation for Network Traffic Analysis	Princeton University, University of Chicago
+2019_wu	Steganographer Identification	University of Shanghai
+2020_zhu_etc	You Do (Not) Belong Here: Detecting DPI Evasion Attacks with Context Learning	University of California Riverside, Samsung Research America
+2015_sandvine	Internet Traffic Classification	Sandvine Incorporated ULC
+
+# network steganography
+2019_lamshöft_dittmann	Assessment of Hidden Channel Attacks: Targeting Modbus/TCP	Otto-von-Guericke-University of Magdeburg
+2020_li_towsley_goeckel	Covert Communication in Continuous-Time Systems	 UMass Amherst
+2019_salehkalaibar_etc	Covert Communication Over a Compound Channel	
+2019_ovadya_etc	Cross-Router Covert Channels	Ben-Gurion University of the Negev
+2020_hildebrandt_etc	Information Hiding in Industrial Control Systems: An OPC UA based Supply Chain Attack and its Detection	Otto-von-Guericke-University Magdeburg, Brandenburg University of Applied Sciences
+2019_taram_venkat_tullsen	Packet Chasing: Spying on Network Packets over a Cache Side-Channel	University of California San Diego, University of Virginia
+2020_oakley_etc	Protocol Proxy: An FTE-based Covert Channel	Clemson University
+2018_mazurczyk_wendzel_cabaj	Towards Deriving Insights into Data Hiding Methods Using Pattern-based Approach	Warsaw University of Technology, Worms University of Applied Science
+2020_maynard_mclaughlin	Towards Understanding Man-on-the-Side Attacks (MotS) in SCADA Networks	Queen's University Belfast
+2020_cho_lee	Treating Interference as Noise is Optimal for Covert Communication over Interference Channels	Korea Advanced Institute of Science & Technology (KAIST)
+2019_herbrechtsmeyer_etc	Verdeckte Kommunikation via Modbus TCP/IP	University of Magdeburg
+
+# traffic generation
+2020_alqahtani_alanazi_hamdaoui	Traffic Behavior in Cloud Data Centers: A Survey	Oregon State University
+2007_arrowsmith_mondragón	Modelling Network Data Traffic	Queen Mary University of London
+2007_chen	Network Traffic Modeling	Southern Methodist University Dallas
+2004_sigcomm	Network Traffic Modeling (Presentation)	Boston University
+2019_patsakis_casino_katos	Encrypted and Covert DNS Queries for Botnets: Challenges and Countermeasures	 University Piraeus, Bournemouth University
+
+# books
+<title>
+Information Hiding in Computer Networks
+Performance Analysis of Queuing and Computer Networks
+Modeling and Tools for Network Simulation
+Intrusion Detection
+Network Data Analytics
+Guide to Vulnerability Analysis for Computer Networks and Systems
+Network Traffic Anomaly Detection and Prevention
+Guide to Flow-Aware Networking
+Analysis of Computer Networks

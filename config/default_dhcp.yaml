@@ -1,0 +1,173 @@
+# topology
+nodes: [host1, router, host2]
+links: [[link1, host1, router],[link2, router, host2]]
+
+# pcap generation config
+interface_link: link2
+interface_link_side: host2
+duration_type: number_packets
+duration: 1000
+
+# user-specified packets
+my_packet_1: 
+  layers: [eth, ipv4, udp, dhcp]
+  eth: 
+    src_mac: 
+      distribution_type: self_specified
+      cumulative_probabilities: [0.2, 0.4, 0.9, 1]
+      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
+    dst_mac: 
+      distribution_type: static
+      values: [ff:ff:ff:ff:ff:ff]
+    eth_type: 
+      distribution_type: static
+      values: [0x800]
+  ipv4:
+    version:
+      distribution_type: static
+      values: [4]
+    header_length:
+      distribution_type: static
+      values: [20]
+    type_of_service:
+      distribution_type: static
+      values: [0]
+    total_length:
+      distribution_type: static
+      values: [50]
+    identification:
+      distribution_type: static
+      values: [0]
+    fragment_offset:
+      distribution_type: static
+      values: [0]
+    ttl:
+      distribution_type: static
+      values: [128]
+    protocol:
+      distribution_type: static
+      values: [17]
+    header_checksum:
+      distribution_type: static
+      values: [12345]
+    ip_src:
+      distribution_type: static
+      values: [10.0.0.1]
+    ip_dst:
+      distribution_type: static
+      values: [10.0.0.2]
+  udp: 
+    src_port:
+      distribution_type: static
+      values: [67]
+    dst_port:
+      distribution_type: static
+      values: [68]
+    length: 
+      distribution_type: static
+      values: [1024]
+    header_checksum:
+      distribution_type: static
+      values: [12345]
+  dhcp:
+    opcode: 
+      distribution_type: static
+      values: [1]
+    hardware_type: 
+      distribution_type: static
+      values: [1]
+    hardware_address_length: 
+      distribution_type: static
+      values: [6]
+    hops: 
+      distribution_type: static
+      values: [0]
+    transaction_id: 
+      distribution_type: static
+      values: [3]
+    seconds_elapsed: 
+      distribution_type: static
+      values: [2]
+    flags: 
+      distribution_type: static
+      values: [0]
+    client_ip_address:
+      distribution_type: static
+      values: [10.0.0.1]
+    your_ip_address:
+      distribution_type: static
+      values: [10.0.0.2]
+    server_ip_address: 
+      distribution_type: static
+      values: [10.0.0.3]
+    gateway_ip_address: 
+      distribution_type: static
+      values: [10.0.0.1]
+    client_hardware_address: 
+      distribution_type: static
+      values: [00:00:00:00:00:01]
+    server_name: 
+      distribution_type: static
+      values: [my_server]
+    boot_file_name: 
+      distribution_type: static
+      values: [my_boot_file]
+    magic_number: 
+      distribution_type: static
+      values: [35]
+
+# configuration of nodes
+host1:
+  ip_address: 10.0.0.2
+  mac_address: 00:00:00:00:00:02
+  application_layer_roles: [arp_client, arp_server]
+  role_specific_delays: [2, 3]
+  user_specified_traffic: 
+    link1: 
+      pcap_file_specified: false
+      pcap_file_path: pcaps/dhcp_input.pcap
+      messages: [my_packet_1]
+      delay_distribution_types: [static]
+      delay_distribution_options: [[]]
+      delay_distribution_values: [[600000000000]]
+  serialization_delay: 1
+
+host2:
+  ip_address: 10.0.0.3
+  mac_address: 00:00:00:00:00:03
+  application_layer_roles: []
+  role_specific_delays: []
+  user_specified_traffic:
+    link2: 
+      pcap_file_specified: false
+      pcap_file_path: pcaps/dhcp_input.pcap
+      messages: [my_packet_1, my_packet_1, my_packet_1]
+      delay_distribution_types: [loop, index_uniform, static]
+      delay_distribution_options: [[],[],[]]
+      delay_distribution_values: [[999], [1000, 40000, 15000000], [3000100000, 23]]
+  serialization_delay: 1
+
+router: 
+  ip_address: 10.0.0.1
+  mac_address: 00:00:00:00:00:01
+  application_layer_roles: []
+  role_specific_delays: []
+  user_specified_traffic: []
+  serialization_delay: 1  
+
+# configuration of links
+link1:
+  delay_distribution_type: static
+  delay_values: [15000000]
+  packet_loss_distribution_type: none
+  packet_loss_values: []
+  packet_corruption_distribution_type: none
+  packet_corruption_values: []
+
+link2:
+  delay_distribution_type: static
+  delay_values: [300]
+  packet_loss_distribution_type: none
+  packet_loss_values: []
+  packet_corruption_distribution_type: none
+  packet_corruption_values: []
