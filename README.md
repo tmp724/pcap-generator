@@ -31,8 +31,9 @@ One can give a third option that specifies a directory where the roles are confi
 For more information on roles, see further below. 
 
 ### Overview configuration fields
-For quickly getting an understanding of how a configuration file should look like, we recommend you look at the examples in the config folder. 
-Errors in the configuration file will lead to errors in the simulation. At this point (this is a first prototype), we don't guarantee proper error handling with meaningful error messages. 
+For quickly getting an understanding of how a configuration file should look like, it is recommended you look at the examples in the config folder. 
+Errors in the configuration file will lead to errors in the simulation. At this point (this is a first prototype), 
+proper error handling with meaningful error messages is not guaranteed. 
 The following tables contain a detailled description of possible input for each field. 
 
 | Field/Subfield      | Input example                                | Input description              | Possible values                         |
@@ -81,14 +82,15 @@ header_checksum, ip_src, ip_dst
 tbd: ipv6, tcp, udp, dhcp, dns
 
 ### Distribution types
-(tbd) \
 As outlined above, for various configuration fields, one may specify the distribution type and values. 
-We use two types of distributions: Those that relate to a sequence of explicitely stated values and those that relate to the whole range of possible input values, optionally limited by 
+Two types of distributions are used: Those that relate to a sequence of explicitely stated values and those that relate to the whole range of possible input values, optionally limited by 
 stating a minimum and maximum value. While the former type (we will just call it index distribution here) yields no problems in implementation, the latter only works on some configuration 
 fields, as it is lavish to implement it on all header fields for all layers, or (in case of variables not exhibiting field characteristics, e.g. arbitrary strings in a header fields), simply 
 not senseful to implement. When deemed useful, it may however be implemented in some cases, as per the tables above. \
-Here, we explain the behaviour of each distribution type. \
-static: Only one value has to be specified and will be used once. example:
+In the following, the behaviour of each distribution type is explained. \
+
+static: Only one value has to be specified and will be used once. \
+Example:
 ```
 my_packet_1:
   layers: [eth, arp]
@@ -98,7 +100,8 @@ my_packet_1:
       values: [00:00:00:00:00:01]
   ...
 ```
-self_specified: The value will be randomly generated after a given list of cumulative distribution values. example: 
+self_specified: The value will be randomly generated after a given list of cumulative distribution values. \
+Example: 
 ```
 my_packet_1:
   layers: [eth, arp]
@@ -109,7 +112,8 @@ my_packet_1:
       values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
   ...
 ```
-index_loop: The values in the specified values list will be used in turn from left to right and then start again at the left. example: \
+index_loop: The values in the specified values list will be used in turn from left to right and then start again at the left. \
+Example:
 ```
 my_packet_1:
   layers: [eth, arp]
@@ -119,7 +123,8 @@ my_packet_1:
       values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
   ...
 ```
-index_uniform: The value will be randomly generated after a uniform distribution over the list of given values example:\
+index_uniform: The value will be randomly generated after a uniform distribution over the list of given values. \
+Example:
 ```
 my_packet_1:
   layers: [eth, arp]
@@ -133,8 +138,7 @@ loop: tbd \
 uniform: tbd \
 triangular: This is only implemented for the various delay configurations
 
-### Adding new roles
-(tbd) \
+### Adding new roles (tbd)
 Every node can be assigned to exercise roles. A node may then forward, drop, modify or generate traffic based on ingress port, existing layer, or any header 
 field value of the packet. 
 A role can be specified from a stand-alone configuration file. All roles used in the simulation process must be in the specified role folder (default is config/roles as mentioned above). \
