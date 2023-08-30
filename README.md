@@ -23,9 +23,9 @@ Download this repository, go into this folder and run `make`.
 
 ## Usage
 ### Getting started
-`./pcap_generator config/default_arp.yaml pcaps/default_arp.pcap` will execute a simple example. \
-`config/default_arp.yaml` specifies the input config file. If you wish to execute over another configuration, just change the path. \
-`pcaps/default_arp.pcap` specifies the file to store the resulting packet capture in. Again, if you wish for it to be stored elsewhere, 
+`./pcap_generator config/default_arp.yaml pcaps/out.pcap` will execute a simple example. \
+The `config/default_arp.yaml` file specifies the input. If you wish to execute over another configuration, just change the path. \
+`pcaps/out.pcap` specifies the file to store the resulting packet capture in. Again, if you wish for it to be stored elsewhere, 
 you may modify the command accordingly. \
 One can give a third option that specifies a directory where the roles are configured. It defaults to config/roles. 
 For more information on roles, see further below. 
@@ -72,9 +72,13 @@ For each defined user_specified_traffic in any node:
 
 Header fields within an Ethernet layer: src_mac, dst_mac, eth_type
 
-Header fields within an ARP layer: hardware_type, protocol_type, hardware_size, protocol_size, opcode, sender_mac, sender_ip, target_mac, target_ip
+Header fields within an ARP layer: hardware_type, protocol_type, hardware_size, protocol_size, opcode, sender_mac, sender_ip, target_mac, 
+target_ip
 
-tbd: ipv4, ipv6, tcp, udp, dhcp, dns
+Header fields within an IPv4 layer: version, header_length, type_of_service, total_length, identification, fragment_offset, ttl, protocol, 
+header_checksum, ip_src, ip_dst
+
+tbd: ipv6, tcp, udp, dhcp, dns
 
 ### Distribution types
 (tbd) \
@@ -94,34 +98,40 @@ my_packet_1:
       values: [00:00:00:00:00:01]
   ...
 ```
-self_specified: The value will be randomly generated after a given list of cumulative distribution values. example: \
-`my_packet_1: \
-  layers: [eth, arp] \
-  eth: \
-    src_mac: \
-      distribution_type: self_specified \
-      cumulative_probabilities: [0.2, 0.4, 0.9, 1] \
-      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04] \
-  ...` \
+self_specified: The value will be randomly generated after a given list of cumulative distribution values. example: 
+```
+my_packet_1:
+  layers: [eth, arp]
+  eth:
+    src_mac:
+      distribution_type: self_specified
+      cumulative_probabilities: [0.2, 0.4, 0.9, 1]
+      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
+  ...
+```
 index_loop: The values in the specified values list will be used in turn from left to right and then start again at the left. example: \
-`my_packet_1: \
-  layers: [eth, arp] \
-  eth: \
-    src_mac: \
-      distribution_type: loop \
-      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04] \
-  ...` \
+```
+my_packet_1:
+  layers: [eth, arp]
+  eth:
+    src_mac:
+      distribution_type: loop
+      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
+  ...
+```
 index_uniform: The value will be randomly generated after a uniform distribution over the list of given values example:\
-`my_packet_1: \
-  layers: [eth, arp] \
-  eth: \
-    src_mac: \
-      distribution_type: uniform \
-      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04] \
-  ...` \
-loop: \
-uniform: \
-triangular: This is only implemented for the various delay configurations\
+```
+my_packet_1:
+  layers: [eth, arp]
+  eth:
+    src_mac:
+      distribution_type: uniform
+      values: [00:00:00:00:00:01, 00:00:00:00:00:02, 00:00:00:00:00:03, 00:00:00:00:00:04]
+  ...
+```
+loop: tbd \
+uniform: tbd \
+triangular: This is only implemented for the various delay configurations
 
 ### Adding new roles
 (tbd) \
