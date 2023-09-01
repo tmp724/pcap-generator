@@ -18,7 +18,7 @@ for all header fields yet. I will at some point come up with a versioning system
 ## Installation
 Tested on Fedora 30 and Ubuntu 18.04. Should run on most Linux platforms. \
 Install [yaml-cpp 0.6.3](https://github.com/jbeder/yaml-cpp) and the latest [pcapplusplus](https://pcapplusplus.github.io/docs/install). 
-Make sure the header files get installed into /usr/local/include (should be the default) or change the pcap-generator Makefile later accordingly. \
+Make sure the header files get installed into /usr/local/include (should be the default) or change the pcap-generator Makefile accordingly. \
 Download this repository, go into this folder and run `make`.
 
 ## Usage
