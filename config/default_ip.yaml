@@ -9,18 +9,18 @@ duration_type: number_packets
 duration: 100
 
 # user-specified packets
-my_packet_1: 
+my_packet_1:
   layers: [eth, ipv4]
-  eth: 
-    src_mac: 
+  eth:
+    src_mac:
       distribution_type: static
       values: [00:00:00:00:00:03]
-    dst_mac: 
+    dst_mac:
       distribution_type: static
       values: [00:00:00:00:00:02]
-    eth_type: 
+    eth_type:
       distribution_type: static
-      values: [0x800]
+      values: [0x0800]
   ipv4:
     version:
       distribution_type: static

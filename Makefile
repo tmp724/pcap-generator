@@ -1,7 +1,7 @@
 COMPILER := g++
 
 #COMPILEFLAGS := -std=c++11 -Wall --pedantic -I/usr/local/include/yaml-cpp -I/usr/local/include/pcapplusplus
-COMPILEFLAGS := -std=c++11 -I/usr/local/include/yaml-cpp -I/usr/local/include/pcapplusplus
+COMPILEFLAGS := -std=c++11 -Wall --pedantic -O0 -g -I/usr/local/include/yaml-cpp -I/usr/local/include/pcapplusplus
 
 LINKERFLAGS := -lPcap++ -lPacket++ -lCommon++ -lpcap -lpthread -lyaml-cpp
 

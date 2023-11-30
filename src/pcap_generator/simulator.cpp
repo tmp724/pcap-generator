@@ -38,11 +38,9 @@ void Simulator::initialization(){
       my_event.link_name = my_traffic.second.link_name;
       my_event.node_name = n.second.name;
       my_event.traffic_name = my_traffic.second.traffic_name;
-std::cout<< "test\n";
       pcpp::Packet my_packet;
       packet_construction(my_packet, my_traffic.second);
       my_event.packet = my_packet;
-std::cout<< "test2\n";
       // push event to future event list
       fel.push(my_event);
     }
@@ -185,11 +183,9 @@ void Simulator::event_handling(){
 
       uint64_t delay_2 = config.nodes[eve.node_name].user_specified_traffic[eve.traffic_name].delay_values[std::rand() % config.nodes[eve.node_name].user_specified_traffic[eve.traffic_name].delay_values.size()];
       new_event_2.time = eve.time + delay_2;
-std::cout << "dope test\n";
       pcpp::Packet my_packet_2;
       packet_construction(my_packet_2, config.nodes[eve.node_name].user_specified_traffic[eve.traffic_name]);
       new_event_2.packet = my_packet_2;
-std::cout << "dope test2\n";
       fel.push(new_event_2);
     }
   }else if (eve.type == packet_arrives_at_node){//TODO: process role functionality, e.g. bridge, router, server, client TODO: add serialization delay
@@ -287,25 +283,30 @@ void Simulator::packet_construction(pcpp::Packet& my_packet, User_defined_traffi
     auto& my_layer = my_traffic.layers[my_traffic.layer_names[i]];
     if(my_layer.name == "eth"){
       eth_layer_construction(my_packet, my_layer);
-  std::cout << "after eth:\n" << my_packet.toString();
+      std::cout << "after eth:\n" << my_packet.toString();
     }else if(my_layer.name == "arp"){
       arp_layer_construction(my_packet, my_layer);
-  std::cout << my_packet.toString();
+      std::cout << my_packet.toString();
     }else if(my_layer.name == "ipv4"){
       ipv4_layer_construction(my_packet, my_layer);
-  std::cout << "after ipv4:\n" << my_packet.toString();
+      std::cout << "after ipv4:\n" << my_packet.toString();
     }else if(my_layer.name == "ipv6"){
       ipv6_layer_construction(my_packet, my_layer);
+      std::cout << "after ipv6:\n" << my_packet.toString();
     }else if(my_layer.name == "udp"){
       udp_layer_construction(my_packet, my_layer);
-  std::cout << "after udp:\n" << my_packet.toString();
+//      pcpp::RawPacket udp_packet = udp_layer_construction(my_packet, my_layer);
+//      my_packet = pcpp::Packet(&udp_packet);
+      std::cout << "after udp:\n" << my_packet.toString();
     }else if(my_layer.name == "tcp"){
       tcp_layer_construction(my_packet, my_layer);
+      std::cout << "after tcp:\n" << my_packet.toString();
     }else if(my_layer.name == "dhcp"){
       dhcp_layer_construction(my_packet, my_layer);
-  std::cout << "after dhcp:\n" << my_packet.toString();
+      std::cout << "after dhcp:\n" << my_packet.toString();
     }else if(my_layer.name == "dns"){
       dns_layer_construction(my_packet, my_layer);
+      std::cout << "after dns:\n" << my_packet.toString();
     }
   }
   std::cout << "final packet:\n" << my_packet.toString();
@@ -313,60 +314,65 @@ void Simulator::packet_construction(pcpp::Packet& my_packet, User_defined_traffi
 }
 
 void Simulator::eth_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
-      pcpp::MacAddress my_src_mac_address, my_dst_mac_address;
-      std::string my_eth_type;
-      // iterate over header fields
-      for(auto& my_header_field : my_layer.header_fields){
-        if(my_header_field.second.name == "src_mac"){
-          // check for distribution type
-          if(my_header_field.second.distribution_type == config.static_d){
-            my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[0]);
-          }else if(my_header_field.second.distribution_type == Configuration::self_specified){
-            uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
-            my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[index]);
-          }else if(my_header_field.second.distribution_type == Configuration::uniform){
-            /*std::uniform_int_distribution<uint32_t> distribution(0, my_header_field.second.values.size());
-            auto generator = std::bind(distribution, engine);
-            my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[generator()]);*/
-            my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]);
-          }/*TODO: triangular distribution
-           else if(my_header_field.second.distribution_type == triangular){
-            std::vector<double> i{double(my_header_field.second.distribution_[0]), double(my_header_field.second.values[1]), double(my_header_field.second.values[2]))};
-            std::vector<double> w{0, 1, 0};
-            std::piecewise_linear_distribution<> d(i.begin(), i.end(), w.begin());
-            my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[""]
-          }*/
-        }else if(my_header_field.second.name == "dst_mac"){
-          // check for distribution type
-          if(my_header_field.second.distribution_type == Configuration::static_d){
-            my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[0]);
-          }else if(my_header_field.second.distribution_type == Configuration::self_specified){
-            uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
-            my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[index]);
-          }else if(my_header_field.second.distribution_type == Configuration::uniform){
-            my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]);
-          }
-        }else if(my_header_field.second.name == "eth_type"){
-          // check for distribution type
-          if(my_header_field.second.distribution_type == Configuration::static_d){
-            my_eth_type = my_header_field.second.values[0];
-          }else if(my_header_field.second.distribution_type == Configuration::self_specified){
-            uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
-            my_eth_type = my_header_field.second.values[index];
-          }else if(my_header_field.second.distribution_type == Configuration::uniform){
-            my_eth_type = my_header_field.second.values[std::rand() % my_header_field.second.values.size()];
-          }
-        }
+  pcpp::MacAddress my_src_mac_address, my_dst_mac_address;
+  std::string my_eth_type;
+  // iterate over header fields
+  for(auto& my_header_field : my_layer.header_fields){
+    if(my_header_field.second.name == "src_mac"){
+      // check for distribution type
+      if(my_header_field.second.distribution_type == config.static_d){
+        my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[0]);
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[index]);
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+        /*std::uniform_int_distribution<uint32_t> distribution(0, my_header_field.second.values.size());
+        auto generator = std::bind(distribution, engine);
+        my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[generator()]);*/
+        my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]);
+      }/*TODO: triangular distribution
+       else if(my_header_field.second.distribution_type == triangular){
+        std::vector<double> i{double(my_header_field.second.distribution_[0]), double(my_header_field.second.values[1]), double(my_header_field.second.values[2]))};
+        std::vector<double> w{0, 1, 0};
+        std::piecewise_linear_distribution<> d(i.begin(), i.end(), w.begin());
+        my_src_mac_address = pcpp::MacAddress(my_header_field.second.values[""]
+      }*/
+    }else if(my_header_field.second.name == "dst_mac"){
+      // check for distribution type
+      if(my_header_field.second.distribution_type == Configuration::static_d){
+        my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[0]);
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[index]);
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+        my_dst_mac_address = pcpp::MacAddress(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]);
       }
+    }else if(my_header_field.second.name == "eth_type"){
+      // check for distribution type
+      if(my_header_field.second.distribution_type == Configuration::static_d){
+        my_eth_type = my_header_field.second.values[0];
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        my_eth_type = my_header_field.second.values[index];
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+        my_eth_type = my_header_field.second.values[std::rand() % my_header_field.second.values.size()];
+      }
+    }
+  }
 //      int my_eth_type_int = std::stoi(my_eth_type);
-      uint32_t my_eth_type_int;
-      std::stringstream etherstream;
-      etherstream << std::hex << my_eth_type;
-      etherstream >> my_eth_type_int;
-      pcpp::EthLayer my_eth_layer(my_src_mac_address, my_dst_mac_address, my_eth_type_int);
-      pcpp::Packet tmp_packet(my_packet);
-      tmp_packet.addLayer(&my_eth_layer);
-      my_packet = tmp_packet;
+  uint32_t my_eth_type_int;
+  std::stringstream etherstream;
+  etherstream << std::hex << my_eth_type;
+  etherstream >> my_eth_type_int;
+//  pcpp::EthLayer my_eth_layer(my_src_mac_address, my_dst_mac_address, my_eth_type_int);
+  pcpp::EthLayer my_eth_layer(my_src_mac_address, my_dst_mac_address, my_eth_type_int);
+//  std::cout << "ethertype: " << my_eth_type_int << "\n";
+//  my_eth_layer.getEthHeader()->etherType = pcpp::hostToNet16(my_eth_type_int);
+  pcpp::Packet tmp_packet(my_packet);
+  tmp_packet.addLayer(&my_eth_layer);
+//  pcpp::RawPacket* ret = my_packet.getRawPacket();
+//  return *ret;
+  my_packet = tmp_packet;
 }
 
 void Simulator::arp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
@@ -496,13 +502,23 @@ void Simulator::ipv4_layer_construction(pcpp::Packet& my_packet, User_defined_la
       }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
         version = uint8_t(std::stoi(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]));
       }
+    }else if(my_header_field.second.name == "total_length"){
+      if(my_header_field.second.distribution_type == Configuration::loop){
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+      }else if(my_header_field.second.distribution_type == Configuration::static_d){
+        total_length = uint16_t(std::stoi(my_header_field.second.values[0]));
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+      }else if(my_header_field.second.distribution_type == Configuration::triangular){
+      }else if(my_header_field.second.distribution_type == Configuration::index_loop){
+      }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
+      }
     }
   }
   pcpp::IPv4Layer my_ipv4_layer(src, dst);
   my_ipv4_layer.getIPv4Header()->ipVersion = 4;
 //  my_ipv4_layer.getIPv4Header()->internetHeaderLength = 20;
 //  my_ipv4_layer.getIPv4Header()->typeOfService = 17;
-//  my_ipv4_layer.getIPv4Header()->totalLength = 200;
+//  my_ipv4_layer.getIPv4Header()->totalLength = total_length;
 //  my_ipv4_layer.getIPv4Header()->ipId = 17;
 //  my_ipv4_layer.getIPv4Header()->fragmentOffset = 17;
 //  my_ipv4_layer.getIPv4Header()->timeToLive = 17;
@@ -512,6 +528,8 @@ void Simulator::ipv4_layer_construction(pcpp::Packet& my_packet, User_defined_la
   pcpp::Packet tmp_packet(my_packet);
 //my_ipv4_layer.getIPv4Header()->timeToLive = 64;
   tmp_packet.addLayer(&my_ipv4_layer);
+//  pcpp::RawPacket* ret = my_packet.getRawPacket();
+//  return *ret;
   my_packet = tmp_packet;
 }
 
@@ -555,6 +573,7 @@ void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_la
 }
 
 void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
+//void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
   uint16_t src_port, dst_port;
   for(auto& my_header_field : my_layer.header_fields){
     if(my_header_field.second.name == "src_port"){
@@ -586,21 +605,17 @@ void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_lay
     }
   }
 //std::auto_ptr<pcpp::Layer> my_udp_layer(new pcpp::UdpLayer(src_port, dst_port));
-//  pcpp::UdpLayer my_udp_layer(src_port, dst_port);
+  pcpp::UdpLayer my_udp_layer(src_port, dst_port);
 //  my_packet.addLayer(&my_udp_layer);
 //std::cout << my_packet.toString();
-std::cout << "test udp 2\n";
 //my_packet.addLayer(my_udp_layer);
-/*  pcpp::Packet tmp_packet(my_packet);
-std::cout << "test udp 3\n";
+  pcpp::Packet tmp_packet(my_packet);
   tmp_packet.addLayer(&my_udp_layer);
+//  pcpp::RawPacket* ret = my_packet.getRawPacket();
+//  return *ret;
 //std::cout << tmp_packet.toString();
-std::cout << "test udp 4\n";
-  my_packet = tmp_packet;*/
+  my_packet = tmp_packet;
 //std::cout << my_packet.toString();
-std::cout << "test udp end\n";
-std::cout << "test udp end\n";
-std::cout << "test udp end\n";
 }
 
 void Simulator::tcp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){

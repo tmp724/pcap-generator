@@ -5,9 +5,11 @@
 #include <functional>
 #include <sstream>
 #include <queue>
+#include <pcapplusplus/SystemUtils.h>
 #include <pcapplusplus/PcapFileDevice.h>
 #include <pcapplusplus/RawPacket.h>
 #include <pcapplusplus/Packet.h>
+#include <pcapplusplus/EthLayer.h>
 #include <pcapplusplus/IPv4Layer.h>
 #include <pcapplusplus/IPv6Layer.h>
 #include <pcapplusplus/UdpLayer.h>
@@ -58,7 +60,7 @@ private:
   Configuration config;
   const char* output_file;
   uint64_t timer;
-  uint64_t number_packets_captured;
+  uint64_t number_packets_captured = 0;
   std::priority_queue<int,std::vector<Event>,std::greater<Event>> fel;
   std::vector<uint64_t> time_list;
   std::vector<pcpp::Packet> packet_list;
