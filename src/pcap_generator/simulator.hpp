@@ -12,6 +12,7 @@
 #include <pcapplusplus/EthLayer.h>
 #include <pcapplusplus/IPv4Layer.h>
 #include <pcapplusplus/IPv6Layer.h>
+#include <pcapplusplus/IcmpV6Layer.h>
 #include <pcapplusplus/UdpLayer.h>
 #include <pcapplusplus/TcpLayer.h>
 #include <pcapplusplus/DhcpLayer.h>
@@ -49,6 +50,7 @@ private:
   void arp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
   void ipv4_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
   void ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
+  void icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
   void udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
   void tcp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);
   void dhcp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer);

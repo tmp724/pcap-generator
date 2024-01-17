@@ -129,6 +129,8 @@ void Configuration::load_nodes_configuration(YAML::Node& config){
             load_ipv4_layer_config(my_user_defined_traffic, my_user_defined_layer, config);
           }else if(layers[i] == "ipv6"){
             load_ipv6_layer_config(my_user_defined_traffic, my_user_defined_layer, config);
+          }else if(layers[i] == "icmpv6"){
+            load_ipv6_layer_config(my_user_defined_traffic, my_user_defined_layer, config);
           }else if(layers[i] == "udp"){
             load_udp_layer_config(my_user_defined_traffic, my_user_defined_layer, config);
           }else if(layers[i] == "tcp"){
@@ -310,6 +312,19 @@ void Configuration::load_ipv6_layer_config(User_defined_traffic& my_user_defined
   // load layer name
   my_user_defined_layer.name = "ipv6";
   std::vector<std::string> field_names {"version", "traffic_class", "flow_label", "payload_length", "next_header", "hop_limit", "ip_src", "ip_dst"};
+  my_user_defined_layer.number_header_fields = field_names.size();
+  Header_field my_header_field;
+
+  for(uint16_t i = 0; i < my_user_defined_layer.number_header_fields; i++){
+    my_user_defined_layer.header_fields.insert({field_names[i], my_header_field});
+    my_user_defined_layer.header_fields[field_names[i]].name = field_names[i];
+  }
+}
+
+void Configuration::load_icmpv6_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config){
+  // load layer name
+  my_user_defined_layer.name = "icmpv6";
+  std::vector<std::string> field_names {"type", "code"};
   my_user_defined_layer.number_header_fields = field_names.size();
   Header_field my_header_field;
 

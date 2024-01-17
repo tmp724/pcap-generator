@@ -73,6 +73,7 @@ private:
   void load_arp_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
   void load_ipv4_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
   void load_ipv6_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
+  void load_icmpv6_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
   void load_udp_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
   void load_tcp_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);
   void load_dhcp_layer_config(User_defined_traffic& my_user_defined_traffic, User_defined_layer& my_user_defined_layer, YAML::Node& config);

@@ -293,6 +293,9 @@ void Simulator::packet_construction(pcpp::Packet& my_packet, User_defined_traffi
     }else if(my_layer.name == "ipv6"){
       ipv6_layer_construction(my_packet, my_layer);
       std::cout << "after ipv6:\n" << my_packet.toString();
+    }else if(my_layer.name == "icmpv6"){
+      ipv6_layer_construction(my_packet, my_layer);
+      std::cout << "after icmpv6:\n" << my_packet.toString();
     }else if(my_layer.name == "udp"){
       udp_layer_construction(my_packet, my_layer);
 //      pcpp::RawPacket udp_packet = udp_layer_construction(my_packet, my_layer);
@@ -569,6 +572,46 @@ void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_la
   my_ipv6_layer.getIPv6Header()->hopLimit=64;
   pcpp::Packet tmp_packet(my_packet);
   tmp_packet.addLayer(&my_ipv6_layer);
+  my_packet = tmp_packet;
+}
+
+void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
+  uint8_t type, code;
+  for(auto& my_header_field : my_layer.header_fields){
+    if(my_header_field.second.name == "type"){
+      if(my_header_field.second.distribution_type == Configuration::loop){
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        type = uint8_t(std::stoi(my_header_field.second.values[index]));
+      }else if(my_header_field.second.distribution_type == Configuration::static_d){
+        type = uint8_t(std::stoi(my_header_field.second.values[0]));
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+      }else if(my_header_field.second.distribution_type == Configuration::triangular){
+      }else if(my_header_field.second.distribution_type == Configuration::index_loop){
+      }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
+        type = uint8_t(std::stoi(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]));
+      }
+    }else if(my_header_field.second.name == "code"){
+      if(my_header_field.second.distribution_type == Configuration::loop){
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        code = uint8_t(std::stoi(my_header_field.second.values[index]));
+      }else if(my_header_field.second.distribution_type == Configuration::static_d){
+        code = uint8_t(std::stoi(my_header_field.second.values[0]));
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+      }else if(my_header_field.second.distribution_type == Configuration::triangular){
+      }else if(my_header_field.second.distribution_type == Configuration::index_loop){
+      }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
+        code = uint8_t(std::stoi(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]));
+      }
+    }
+  }
+  pcpp::IcmpV6Layer my_icmpv6_layer();
+//  pcpp::IcmpV6Layer my_icmpv6_layer(type, code);
+//  my_icmpv6_layer.getIPv6Header()->nextHeader=59;
+//  my_icmpv6_layer.getIPv6Header()->hopLimit=64;
+  pcpp::Packet tmp_packet(my_packet);
+  tmp_packet.addLayer(&my_icmpv6_layer);
   my_packet = tmp_packet;
 }
 
