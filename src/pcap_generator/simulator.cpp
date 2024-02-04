@@ -575,7 +575,7 @@ void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_la
   my_packet = tmp_packet;
 }
 
-void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
+/*void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
   uint8_t type, code;
   for(auto& my_header_field : my_layer.header_fields){
     if(my_header_field.second.name == "type"){
@@ -606,14 +606,13 @@ void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_
       }
     }
   }
-  pcpp::IcmpV6Layer my_icmpv6_layer();
-//  pcpp::IcmpV6Layer my_icmpv6_layer(type, code);
-//  my_icmpv6_layer.getIPv6Header()->nextHeader=59;
-//  my_icmpv6_layer.getIPv6Header()->hopLimit=64;
+//  pcpp::ICMPv6EchoLayer my_icmpv6_layer();
+  pcpp::ICMPv6EchoLayer my_icmpv6_layer();
+  my_icmpv6_layer.getEchoHeader()->ICMPv6EchoType=REQUEST;
   pcpp::Packet tmp_packet(my_packet);
   tmp_packet.addLayer(&my_icmpv6_layer);
   my_packet = tmp_packet;
-}
+}*/
 
 void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
 //void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
