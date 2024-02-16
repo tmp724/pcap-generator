@@ -294,7 +294,7 @@ void Simulator::packet_construction(pcpp::Packet& my_packet, User_defined_traffi
       ipv6_layer_construction(my_packet, my_layer);
       std::cout << "after ipv6:\n" << my_packet.toString();
     }else if(my_layer.name == "icmpv6"){
-      ipv6_layer_construction(my_packet, my_layer);
+      icmpv6_layer_construction(my_packet, my_layer);
       std::cout << "after icmpv6:\n" << my_packet.toString();
     }else if(my_layer.name == "udp"){
       udp_layer_construction(my_packet, my_layer);
@@ -538,6 +538,7 @@ void Simulator::ipv4_layer_construction(pcpp::Packet& my_packet, User_defined_la
 
 void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
   pcpp::IPv6Address src, dst;
+  uint8_t next_header;
   for(auto& my_header_field : my_layer.header_fields){
     if(my_header_field.second.name == "ip_src"){
       if(my_header_field.second.distribution_type == Configuration::loop){
@@ -565,18 +566,31 @@ void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_la
       }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
         dst = pcpp::IPv6Address(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]);
       }
+    }else if(my_header_field.second.name == "next_header"){
+      if(my_header_field.second.distribution_type == Configuration::loop){
+      }else if(my_header_field.second.distribution_type == Configuration::self_specified){
+        uint32_t index = calculate_index_after_self_specified_distribution(my_header_field.second.values.size(), my_header_field.second.cumulative_probabilities);
+        next_header = uint8_t(std::stoi(my_header_field.second.values[index]));
+      }else if(my_header_field.second.distribution_type == Configuration::static_d){
+        next_header = uint8_t(std::stoi(my_header_field.second.values[0]));
+      }else if(my_header_field.second.distribution_type == Configuration::uniform){
+      }else if(my_header_field.second.distribution_type == Configuration::triangular){
+      }else if(my_header_field.second.distribution_type == Configuration::index_loop){
+      }else if(my_header_field.second.distribution_type == Configuration::index_uniform){
+        next_header = uint8_t(std::stoi(my_header_field.second.values[std::rand() % my_header_field.second.values.size()]));
+      }
     }
   }
   pcpp::IPv6Layer my_ipv6_layer(src, dst);
-  my_ipv6_layer.getIPv6Header()->nextHeader=59;
+  my_ipv6_layer.getIPv6Header()->nextHeader=next_header;
   my_ipv6_layer.getIPv6Header()->hopLimit=64;
   pcpp::Packet tmp_packet(my_packet);
   tmp_packet.addLayer(&my_ipv6_layer);
   my_packet = tmp_packet;
 }
 
-/*void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
-  uint8_t type, code;
+void Simulator::icmpv6_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
+/*  uint8_t type, code;
   for(auto& my_header_field : my_layer.header_fields){
     if(my_header_field.second.name == "type"){
       if(my_header_field.second.distribution_type == Configuration::loop){
@@ -607,12 +621,12 @@ void Simulator::ipv6_layer_construction(pcpp::Packet& my_packet, User_defined_la
     }
   }
 //  pcpp::ICMPv6EchoLayer my_icmpv6_layer();
-  pcpp::ICMPv6EchoLayer my_icmpv6_layer();
-  my_icmpv6_layer.getEchoHeader()->ICMPv6EchoType=REQUEST;
+  pcpp::IcmpV6Layer my_icmpv6_layer();
+//  my_icmpv6_layer.getEchoHeader();
   pcpp::Packet tmp_packet(my_packet);
   tmp_packet.addLayer(&my_icmpv6_layer);
-  my_packet = tmp_packet;
-}*/
+  my_packet = tmp_packet;*/
+}
 
 void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){
 //void Simulator::udp_layer_construction(pcpp::Packet& my_packet, User_defined_layer& my_layer){

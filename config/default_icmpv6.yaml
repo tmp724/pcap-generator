@@ -45,7 +45,7 @@ my_packet_1:
       values: [58]
     hop_limit:
       distribution_type: static
-      values: [64]
+      values: [128]
     ip_src:
       distribution_type: static
       values: [0000:0000:0000:0000:0000:0000:0000:0001]
